@@ -1,66 +1,575 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lahmacun Sarayı Kampanya</title>
-<style>
-body{margin:0;font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#ff9a9e,#fad0c4);display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;color:#222;}
-.card{background:rgba(255,255,255,0.9);padding:30px;border-radius:20px;max-width:400px;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
-h1{font-size:2em;margin-bottom:10px;}
-p{font-size:1.2em;margin:5px 0;}
-.stok{font-size:2em;font-weight:bold;margin:15px 0;position:relative;}
-.bar-container{width:100%;background:#ddd;border-radius:10px;height:25px;overflow:hidden;margin:10px 0;}
-.bar{height:100%;width:0%;border-radius:10px;transition:0.5s;box-shadow:0 0 15px #ff6b6b;}
-button{margin-top:15px;padding:10px 20px;background:#ff6b6b;color:white;border:none;border-radius:10px;font-size:1em;cursor:pointer;transition:.3s;}
-button:hover{background:#ff4040;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahmacun Sarayı - Kampanya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --primary: #e74c3c;
+            --primary-dark: #c0392b;
+            --secondary: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --success: #27ae60;
+            --warning: #e67e22;
+            --danger: #e74c3c;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        .content {
+            padding: 25px 20px;
+        }
+
+        .message-card {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            border-left: 5px solid var(--secondary);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .message-card h2 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .message-card p {
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .stock-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .stock-title {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .stock-count {
+            font-size: 3em;
+            font-weight: 700;
+            margin: 10px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: countUp 1s ease-out;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 25px;
+            background: #eee;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 15px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: linear-gradient(
+                -45deg,
+                rgba(255,255,255,0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 50px 50px;
+            animation: move 2s linear infinite;
+        }
+
+        .urgency-message {
+            font-size: 0.9em;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .high-urgency {
+            background: #ffeaa7;
+            color: #d35400;
+            border-left: 4px solid #f39c12;
+        }
+
+        .medium-urgency {
+            background: #a29bfe;
+            color: white;
+            border-left: 4px solid #6c5ce7;
+        }
+
+        .low-urgency {
+            background: #55efc4;
+            color: #00b894;
+            border-left: 4px solid #00b894;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .social-section {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .social-title {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .instagram { background: linear-gradient(135deg, #833AB4, #C13584, #E1306C, #FD1D1D, #F56040, #F77737); }
+        .whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+        .maps { background: linear-gradient(135deg, #4285F4, #34A853); }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .feature-text {
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8em;
+            border-top: 1px solid #eee;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes countUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes move {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .actions, .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.2em;
+            }
+            
+            .stock-count {
+                font-size: 2.5em;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="card">
-<h1>🍽️ Akdeniz Üniversitesi Öğrencilerine Özel Kampanya</h1>
-<p id="mesaj">Yükleniyor...</p>
-<p class="stok" id="stok">0</p>
-<div class="bar-container"><div class="bar" id="stokBar"></div></div>
-<button onclick="callNumber()">📞 Hemen Ara</button>
-</div>
+    <div class="app-container">
+        <div class="header">
+            <div class="badge">ÖZEL KAMPANYA</div>
+            <div class="logo">🥙</div>
+            <h1>Lahmacun Sarayı</h1>
+            <p>Akdeniz Üniversitesi Öğrencilerine Özel</p>
+        </div>
 
-<script>
-const API_URL="https://script.google.com/macros/s/AKfycbxHSt5iG6Ax5jYYfPxiLK838yo05fjqbllcj00hQNbIja7uSdM_RXJk9ifnyC3nPa_S8g/exec"; // Apps Script URL
+        <div class="content">
+            <div class="message-card">
+                <h2 id="dynamicMessage">Kampanya Yükleniyor...</h2>
+                <p id="subMessage">Sıcak ve lezzetli lahmacunlarımız sizi bekliyor!</p>
+            </div>
 
-async function fetchData(){
-  try{
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    document.getElementById('mesaj').textContent = data.mesaj || "Bugün kampanya var!";
-    const stok = Number(data.stok ?? 0);
-    document.getElementById('stok').textContent = stok;
+            <div class="stock-section">
+                <div class="stock-title">KALAN KAMPANYALI LAHMACUN</div>
+                <div class="stock-count" id="stockCount">0</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
 
-    // Dinamik stok barı
-    const bar = document.getElementById("stokBar");
-    const percent = Math.min(100, (stok/100)*100);
-    bar.style.width = percent+"%";
+                <div id="urgencyMessage" class="urgency-message">
+                    Hemen sipariş verin, kampanyadan yararlanın!
+                </div>
+            </div>
 
-    // Gradient renk: yeşil -> kırmızı
-    const red = Math.min(255, 255 - Math.floor(percent*2.55));
-    const green = Math.min(255, Math.floor(percent*2.55));
-    bar.style.background = `rgb(${red},${green},0)`;
-    bar.style.boxShadow = `0 0 20px rgb(${red},${green},0)`;
-    
-    // Pulse effect for FOMO
-    if(stok <= 20) bar.classList.add("pulse");
-    else bar.classList.remove("pulse");
-    
-  } catch(err){
-    document.getElementById('mesaj').textContent="Veri yüklenemedi 😢";
-    document.getElementById('stok').textContent="-";
-    console.error(err);
-  }
-}
+            <div class="actions">
+                <button class="btn btn-primary" onclick="callNumber()">
+                    <i class="fas fa-phone"></i> Hemen Ara
+                </button>
+                <button class="btn btn-secondary" onclick="openWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="btn btn-success" onclick="openMaps()">
+                    <i class="fas fa-map-marker-alt"></i> Yol Tarifi
+                </button>
+                <button class="btn btn-warning" onclick="shareApp()">
+                    <i class="fas fa-share-alt"></i> Paylaş
+                </button>
+            </div>
 
-function callNumber(){ window.location.href="tel:05404630707"; }
-fetchData();
-setInterval(fetchData,30000);
-</script>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🚚</div>
+                    <div class="feature-text">Ücretsiz Teslimat</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">Hızlı Hazırlık</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <div class="feature-text">Öğrenci İndirimi</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <div class="feature-text">Kalite Garantisi</div>
+                </div>
+            </div>
+
+            <div class="social-section">
+                <div class="social-title">Bizi Takip Edin</div>
+                <div class="social-buttons">
+                    <a href="https://instagram.com/lahmacunsarayi" class="social-btn instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-btn whatsapp" onclick="openWhatsApp()">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="social-btn maps" onclick="openMaps()">
+                        <i class="fas fa-map"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Lahmacun Sarayı - Tüm hakları saklıdır</p>
+            <p>Akdeniz Üniversitesi Civarı - Her gün 10:00-23:00</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbxHSt5iG6Ax5jYYfPxiLK838yo05fjqbllcj00hQNbIja7uSdM_RXJk9ifnyC3nPa_S8g/exec";
+
+        // Dinamik mesajlar
+        const urgencyMessages = {
+            high: [
+                "🔥 SON DAKİKA! Stoklar tükenmek üzere, hemen sipariş ver!",
+                "⚡ ACELE ET! Sıcak lahmacunlar elden gidiyor!",
+                "🚨 SON ŞANS! Kampanyadan yararlanmak için hemen ara!",
+                "💫 KAÇIRMA! Lezzet fırsatı son anlarını yaşıyor!"
+            ],
+            medium: [
+                "😋 Sıcacık lahmacun keyfi için doğru adres!",
+                "🎯 Fırsatı yakala, lezzetin tadını çıkar!",
+                "👑 Kalitenin adresi, lezzetin tek adresi!",
+                "💥 Özel kampanyamızdan hemen yararlanın!"
+            ],
+            low: [
+                "⭐ Kaliteli lezzet, uygun fiyat!",
+                "🍽️ Sıcak ve taze, tam öğrenci dostu!",
+                "🎓 Öğrenciye özel indirimli lezzet!",
+                "🤝 Güvenilir lezzet, memnuniyet garantili!"
+            ]
+        };
+
+        async function fetchData() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                updateUI(data);
+            } catch (err) {
+                console.error('Veri yüklenemedi:', err);
+                document.getElementById('dynamicMessage').textContent = "Lezzet molası vermeye ne dersin?";
+                document.getElementById('subMessage').textContent = "Sıcak lahmacunlarımız sizi bekliyor!";
+            }
+        }
+
+        function updateUI(data) {
+            const stock = Number(data.stok ?? 0);
+            const message = data.mesaj || "Özel kampanyamızdan hemen yararlanın!";
+            
+            // Stok sayısını güncelle
+            document.getElementById('stockCount').textContent = stock;
+            
+            // Progress bar'ı güncelle
+            const progressBar = document.getElementById('progressBar');
+            const percent = Math.min(100, (stock / 100) * 100);
+            progressBar.style.width = percent + '%';
+            
+            // Renk ve urgency belirle
+            let urgency = 'low';
+            let color = 'linear-gradient(135deg, #00b894 0%, #00a085 100%)';
+            
+            if (stock <= 20) {
+                urgency = 'high';
+                color = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+            } else if (stock <= 50) {
+                urgency = 'medium';
+                color = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+            }
+            
+            progressBar.style.background = color;
+            
+            // Dinamik mesaj seç
+            const messages = urgencyMessages[urgency];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            document.getElementById('dynamicMessage').textContent = message;
+            document.getElementById('urgencyMessage').textContent = randomMessage;
+            
+            // Urgency class'ını güncelle
+            const urgencyElement = document.getElementById('urgencyMessage');
+            urgencyElement.className = 'urgency-message ' + 
+                (urgency === 'high' ? 'high-urgency' : 
+                 urgency === 'medium' ? 'medium-urgency' : 'low-urgency');
+        }
+
+        function callNumber() {
+            window.location.href = "tel:+905404630707";
+        }
+
+        function openWhatsApp() {
+            const message = "Merhaba, Lahmacun Sarayı kampanyası hakkında bilgi almak istiyorum!";
+            window.open(`https://wa.me/905404630707?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function openMaps() {
+            // Akdeniz Üniversitesi koordinatları
+            window.open(`https://maps.google.com/maps?q=36.8865,30.6831&z=17`, '_blank');
+        }
+
+        function shareApp() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Lahmacun Sarayı - Kampanya',
+                    text: 'Akdeniz Üniversitesi öğrencilerine özel lahmacun kampanyası!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Sayfa linkini kopyalayıp paylaşabilirsiniz: ' + window.location.href);
+            }
+        }
+
+        // Sayfa yüklendiğinde ve her 30 saniyede bir veri çek
+        fetchData();
+        setInterval(fetchData, 30000);
+
+        // PWA benzeri davranış
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                // Basit bir offline destek
+                console.log('PWA hazır!');
+            }
+        });
+    </script>
 </body>
 </html>
